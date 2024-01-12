@@ -14,9 +14,9 @@ $File|ForEach-Object {
     New-ADUser `
     -Name ($_.'Given Name'+' '+$_.Surname) `
     -AccountPassword (ConvertTo-SecureString $_.Password -AsPlainText -Force) `
+    -ChangePasswordAtLogin:$false
     -City $_.City `
     -Company $_.Company `
-    -OtherAttributes @{co=$_.Country}`
     -DisplayName ($_.'Given Name'+' '+$_.Surname) `
     -EmailAddress $_.'E-Mail' `
     -Enabled $true `
@@ -26,7 +26,9 @@ $File|ForEach-Object {
     -PasswordNeverExpires $true `
     -Path ("ou="+$_."organizational unit"+",dc=wsc2019,dc=ru") `
     -SamAccountName $_.ID `
-    -Surname $_.Surname
-    Add-ADGroupMember -Identity $_.Group -Members $_.IDz
+    -UserPrincipalName ($_.ID+'@wsc2019.ru') `
+    -Surname $_.Surname `
+    -Title $.'Job Title'
+    Add-ADGroupMember -Identity $_.Group -Members $_.ID
 }
 
